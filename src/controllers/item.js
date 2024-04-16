@@ -29,7 +29,7 @@ export const INSERT_ITEM = async (req, res) => {
       title: req.body.title,
       seller: req.body.seller,
       price: req.body.price,
-      photoUrl: req.body.photo,
+      photoUrl: req.body.photoUrl,
     });
     const response = await item.save();
 
