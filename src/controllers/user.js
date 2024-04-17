@@ -32,7 +32,7 @@ export const LOG_IN = async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.body.email });
     if (!user) {
-      return res.status(400).json({ message: "bad datano such user found" });
+      return res.status(400).json({ message: "bad data, no such user found" });
     }
 
     const isPasswordMatch = bcrypt.compareSync(
