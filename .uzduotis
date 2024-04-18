@@ -1,0 +1,65 @@
+*Užduotis atliekama su node.js express framework;
+*Užduoties atlikimui galima rinktis sql arba nosql duombazę;
+*Beveik visus siūlomus endpointų pavadinimus reikia pervadint;
+*Už pridėta duomenų validaciją visiem endpointam +1 balas;
+*Baigiamajį node.js darbą galima pradėt jau su 4 balais jei prieš tai atliktos užduotys buvo atliktos bei atsiskaitytos;
+*Per atsiskaitymą reikia žinot visą kodą kuris yra parašytas tavo paties. Tad jei nežinai ką kodas daro, geriau jau to kodo tegul nebūna;
+
+Duomenys:
+VARTOTOJAS:
+id
+name
+email
+password
+bought_tickets [...]
+money_balance
+
+BILETAI:
+id
+title
+ticket_price
+from_location
+to_location
+to_location_photo_url
+
+Endpointai:
+
+1. /signUp .  Vartotojo registracija.
+# Vatotojo email privalo turėti "@";
+# Jei vardas parašomas iš mažosios raidės, turi būt pakeista pirmoji raidė į didžiąja;
+# Slaptažodis turi turėt bent 6 simbolius ir vienas ir vienas iš jų turi būt skaičius.
+Neįvykdant validacijos reikalavimų vartotojui yra gražinamas http 400 statusas su žinute, kad validacija buvo nesekminga. 
+Įvykdant sėkmingą registraciją vartotojui gražinamas:
+200 statusas su sėkmės žinute;
+jwt_token (galioja 2h);
+jwt_refresh_token (galioja 1d);
+
+2. /login .  Vartotojo prisijungimas.
+Suvedant blogus vartotojo duomenis grąžinamas 404 http statusas su žinute, kad blogas emailas arba slaptažodis.
+Įvykdant sėkmingą registraciją vartotojui gražinamas:
+200 statusas su sėkmės žinute;
+jwt_token (galioja 2h);
+jwt_refresh_token (galioja 1d);
+
+3. /getNewJwtToken 
+Paduodamas jwt_refresh_token ir jei jis yra geras yra sukuriamas naujas jwt_token ir grąžinamas vartotojui kartu su paduotu jwt_refresh_token.
+Jei jwt_refresh_token nustojęs galioti arba jeigu yra bogas vartotojui gražinamas 400 http statusas su žinute, kad vartotojas turi prisijungti iš naujo.
+
+4. /getAllUsers  (tik prisijungusiems vartotojams)
+Grąžina visus vartotojus. Vartotojai išrikiuojami pagal vardą abecelės tvarka.
+
+5. /getUserById(tik prisijungusiems vartotojams)
+Neradus tokio vartotojo gražinamas 404 http statusas.
+
+6. /buyTicket (tik prisijungusiems vartotojams)
+paduodama:
+user_id ir ticket_id
+Jei vartotojui nepakanka pinigų sąskaitos balanse - gražinamas 400 http statusas su informcine žinute.
+Sėkmingai įvykstant pirkimui:
+Prie Userio bought_tickets masyvo yra pridedamas _id(ticket);
+Iš vartotojo money_balance atimama ticket_price;
+
+7. /getUserByIdWithTickets (tik prisijungusiems vartotojams) (extra)
+Grąžinti vartotoją pagal id su agergutais bought_tickets duomenimis. (naudoti lookup) // aggregacija
+
+8 /insert_ticket (tik prisijungusiems vartotojams)
