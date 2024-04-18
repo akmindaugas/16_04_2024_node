@@ -10,11 +10,11 @@ const app = express();
 // pasakome, kad duomenis gauname json formatu
 app.use(express.json());
 // problema: meta klaida perejus prie loginimosi processinimo is .env
-let uri = "mongodb+srv://TestUser123:TestUser123@cluster1.i67w6ae.mongodb.net/";
+
 app.use(cors());
 mongoose
   // .connect(process.env.MONGO_CONNECTION)
-  .connect(uri)
+  .connect(process.env.uri)
   .then(() => console.log("connected to DB"))
   .catch((err) => {
     console.log("ERR:", err);

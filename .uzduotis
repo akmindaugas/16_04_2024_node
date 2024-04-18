@@ -28,17 +28,17 @@ Endpointai:
 # Vatotojo email privalo turėti "@";
 # Jei vardas parašomas iš mažosios raidės, turi būt pakeista pirmoji raidė į didžiąja;
 # Slaptažodis turi turėt bent 6 simbolius ir vienas ir vienas iš jų turi būt skaičius.
-Neįvykdant validacijos reikalavimų vartotojui yra gražinamas http 400 statusas su žinute, kad validacija buvo nesekminga. 
-Įvykdant sėkmingą registraciją vartotojui gražinamas:
-200 statusas su sėkmės žinute;
-jwt_token (galioja 2h);
+# Neįvykdant validacijos reikalavimų vartotojui yra gražinamas http 400 statusas su žinute, kad validacija buvo nesekminga. 
+# Įvykdant sėkmingą registraciją vartotojui gražinamas:
+# 200 statusas su sėkmės žinute;
+# jwt_token (galioja 2h);
 jwt_refresh_token (galioja 1d);
 
 2. /login .  Vartotojo prisijungimas.
-Suvedant blogus vartotojo duomenis grąžinamas 404 http statusas su žinute, kad blogas emailas arba slaptažodis.
-Įvykdant sėkmingą registraciją vartotojui gražinamas:
-200 statusas su sėkmės žinute;
-jwt_token (galioja 2h);
+# Suvedant blogus vartotojo duomenis grąžinamas 404 http statusas su žinute, kad blogas emailas arba slaptažodis.
+# Įvykdant sėkmingą registraciją vartotojui gražinamas:
+# 200 statusas su sėkmės žinute;
+# jwt_token (galioja 2h);
 jwt_refresh_token (galioja 1d);
 
 3. /getNewJwtToken 
