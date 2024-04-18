@@ -16,7 +16,7 @@ export const SIGN_IN = async (req, res) => {
       name: req.body.name,
       email: req.body.email,
       password: hash,
-      games: [],
+      items: [],
     });
 
     const response = await user.save();

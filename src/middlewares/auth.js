@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 
 export const auth = (req, res, next) => {
+  console.log(req.body);
+
   const token = req.headers.authorization;
   if (!token) {
     return res.status(401).json({ message: "bad auth, but why?" });
@@ -10,7 +12,7 @@ export const auth = (req, res, next) => {
     if (err) {
       return res.status(401).json({ message: "bad auth" });
     }
-    // kadangi ikeliant itema userid nera perduodama headeryje, userid reikia paimti is kitos vietos - autentifikacijos, kur turime dekoduota user id
+    // kadangi ikeliant itema userId nera perduodama headeryje, userid reikia paimti is kitos vietos - autentifikacijos, kur turime dekoduota user id
     req.body.userId = decoded.user_id;
 
     return next();

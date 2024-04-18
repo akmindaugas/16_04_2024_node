@@ -16,8 +16,8 @@ export const GET_ALL_ITEMS = async (req, res) => {
 export const GET_ITEM_BY_ID = async (req, res) => {
   try {
     const item = await ItemModel.findOne({ id: req.params.id });
-
-    return res.status(200).json({ items: items });
+    // ivesti responsa, kad ne 'this endpoint does note exists', bet "no such item found'"
+    return res.status(200).json({ item: item });
   } catch (err) {
     console.log(err);
   }
