@@ -62,7 +62,7 @@ export const LOG_IN = async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.body.email });
     if (!user) {
-      return res.status(400).json({ message: "bad data, no such user found" });
+      return res.status(400).json({ message: "bad data, user not found" });
     }
 
     const isPasswordMatch = bcrypt.compareSync(
@@ -77,10 +77,20 @@ export const LOG_IN = async (req, res) => {
     const jwt_token = jwt.sign(
       { email: user.email, user_id: user.id },
       process.env.JWT_SECRET,
+      { expiresIn: "24h" }
+    );
+    const jwt_refresh_token = jwt.sign(
+      { email: user.email, user_id: user.id },
+      process.env.JWT_SECRET_2,
       { expiresIn: "2h" }
     );
+    if (!jwt_refresh_token) {
+      return res
+        .status(400)
+        .json({ message: "your token expired, hit refresh endpoint" });
+    }
 
-    return res.status(200).json({ jwt_token: jwt_token });
+    return res.status(200).json({ jwt_token, jwt_refresh_token });
   } catch (err) {
     console.log(err);
   }
@@ -88,26 +98,34 @@ export const LOG_IN = async (req, res) => {
 
 export const GET_REFRESH_TOKEN = async (req, res) => {
   try {
-    const jwt_refresh_token = await user({
-      // kur irasomas ir saugojamas jwt_refresh_token?? turi buti bodyje. irasomas sign-in metu ar log-in, ar tik prasant jwt_refresh_token?
-      jwt_refresh_token: req.body.jwt_refresh_token,
-    });
-    if (!jwt_refresh_token) {
-      return res
-        .status(400)
-        .json({ message: "bad or expired jwt_refresh_token. repeat log_in" });
-    } else {
-      user.jwt.sign(
-        { email: user.email, user_id: user.id },
-        process.env.JWT_SECRET,
-        { expiresIn: "24h" }
-      );
+    // kur irasomas ir saugojamas jwt_refresh_token?? turi buti bodyje. irasomas sign-in metu ar log-in, ar tik prasant jwt_refresh_token?
+    const { jwt_refresh_token } = req.body;
+    if (!jwt_reftresh_token) {
+      return res.status(400).json({ message: "No jwt_refresh_token provided" });
     }
+    // Verify jwt_refresh_token
+    jwt.verify(
+      jwt_refresh_token,
+      process.env.JWT_SECRET_2,
+      async (err, decoded) => {
+        if (err) {
+          return res
+            .status(400)
+            .json({ message: "Invalid or expired jwt_refresh_token" });
+        }
 
-    return res
-      .status(200)
-      .json({ jwt_refresh_token: jwt_refresh_token, jwt_token: jwt_token });
+        // Generate new jwt_token
+        const jwt_token = jwt.sign(
+          { email: decoded.email, user_id: decoded.user_id },
+          process.env.JWT_SECRET,
+          { expiresIn: "24h" }
+        );
+
+        return res.status(200).json({ jwt_token });
+      }
+    );
   } catch (err) {
     console.log(err);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };

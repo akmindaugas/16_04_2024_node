@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
-const validateEmail = function (email) {
-  const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  return re.test(email);
-};
+
+// validuojama SIGN_IN endpointte
+// const validateEmail = function (email) {
+//   const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+//   return re.test(email);
+// };
 
 const userSchema = mongoose.Schema({
   id: { type: String, required: true },
