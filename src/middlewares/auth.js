@@ -10,6 +10,8 @@ export const auth = (req, res, next) => {
     if (err) {
       return res.status(401).json({ message: "bad auth" });
     }
+    // kadangi ikeliant itema userid nera perduodama headeryje, userid reikia paimti is kitos vietos - autentifikacijos, kur turime dekoduota user id
+    req.body.userId = decoded.user_id;
 
     return next();
   });
