@@ -22,7 +22,9 @@ const userSchema = mongoose.Schema({
     // ],
   },
   password: { type: String, required: true },
-  games: { type: Array, required: false },
+  items: { type: Array, required: false },
+  money: { type: Number, required: true },
+  boughtItems: [],
 });
 
 export default mongoose.model("User", userSchema);

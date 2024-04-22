@@ -152,3 +152,26 @@ export const GET_USER_BY_ID = async (req, res) => {
     console.log(err);
   }
 };
+
+export const USER_BY_ID_BUY_ITEM = async (req, res) => {
+  try {
+    const { user_id, item_id } = req.body;
+
+    const user = await UserModel.findById(user_id);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    const price = 10;
+
+    if (user.money < price) {
+      return res.status(400).json({ message: "Insufficient balance" });
+    }
+    user.money -= price;
+    user.boughtItems.push(items_id);
+    await user.save();
+
+    return res.status(200).json({ message: "item bought successfully" });
+  } catch (err) {
+    console.log(err);
+  }
+};
