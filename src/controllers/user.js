@@ -77,12 +77,12 @@ export const LOG_IN = async (req, res) => {
     const jwt_token = jwt.sign(
       { email: user.email, user_id: user.id },
       process.env.JWT_SECRET,
-      { expiresIn: "24h" }
+      { expiresIn: "2h" }
     );
     const jwt_refresh_token = jwt.sign(
       { email: user.email, user_id: user.id },
       process.env.JWT_SECRET_2,
-      { expiresIn: "2h" }
+      { expiresIn: "24h" }
     );
     if (!jwt_refresh_token) {
       return res
@@ -98,9 +98,10 @@ export const LOG_IN = async (req, res) => {
 
 export const GET_REFRESH_TOKEN = async (req, res) => {
   try {
-    // kur irasomas ir saugojamas jwt_refresh_token?? turi buti bodyje. irasomas sign-in metu ar log-in, ar tik prasant jwt_refresh_token?
-    const { jwt_refresh_token } = req.body;
-    if (!jwt_reftresh_token) {
+    // kur irasomas ir saugojamas jwt_refresh_token?? turi buti bodyje. irasomas sign-in metu ar log-in, ar tik prasant jwt_refresh_token? prasome is headerio
+    const jwt_refresh_token = req.headers["jwt_refresh_token"];
+
+    if (!req.headers.authorization || !jwt_refresh_token) {
       return res.status(400).json({ message: "No jwt_refresh_token provided" });
     }
     // Verify jwt_refresh_token
@@ -118,7 +119,7 @@ export const GET_REFRESH_TOKEN = async (req, res) => {
         const jwt_token = jwt.sign(
           { email: decoded.email, user_id: decoded.user_id },
           process.env.JWT_SECRET,
-          { expiresIn: "24h" }
+          { expiresIn: "2h" }
         );
 
         return res.status(200).json({ jwt_token });
@@ -127,5 +128,27 @@ export const GET_REFRESH_TOKEN = async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const GET_ALL_USERS = async (req, res) => {
+  try {
+    const users = await UserModel.find().sort({ name: 1 });
+
+    return res.status(200).json({ users: users });
+  } catch (err) {
+    console.log(err);
+  }
+};
+export const GET_USER_BY_ID = async (req, res) => {
+  try {
+    const user = await UserModel.findOne({ id: req.params.id });
+    if (!user) {
+      return res.status(400).json({ message: "user not found" });
+    }
+
+    return res.status(200).json({ user: user });
+  } catch (err) {
+    console.log(err);
   }
 };
