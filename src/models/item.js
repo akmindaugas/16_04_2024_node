@@ -5,7 +5,7 @@ const itemSchema = mongoose.Schema({
   title: { type: String, required: true },
   seller: { type: String, required: true },
   price: { type: Number, required: true },
-  photoUrl: { type: String, required: true },
+  photoUrl: { type: String, required: false },
 });
 
 export default mongoose.model("Item", itemSchema);

@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
 import UserModel from "../models/user.js";
 import jwt from "jsonwebtoken";
+import ItemModel from "../models/item.js";
 
 export const SIGN_IN = async (req, res) => {
   try {
@@ -45,6 +46,8 @@ export const SIGN_IN = async (req, res) => {
         name: capitalizedUserName,
         email: req.body.email,
         password: hash,
+        money: req.body.money,
+        boughtItems: [],
         items: [],
       });
 
@@ -155,6 +158,7 @@ export const GET_USER_BY_ID = async (req, res) => {
 
 export const USER_BY_ID_BUY_ITEM = async (req, res) => {
   try {
+    // abu id paduodame per url
     const { user_id, item_id } = req.body;
 
     const user = await UserModel.findById(user_id);
@@ -173,5 +177,52 @@ export const USER_BY_ID_BUY_ITEM = async (req, res) => {
     return res.status(200).json({ message: "item bought successfully" });
   } catch (err) {
     console.log(err);
+  }
+};
+// ============================================================================
+export const BUY_ITEM = async (req, res) => {
+  try {
+    const { buyerId, itemId } = req.body;
+
+    // Find the item being bought
+    const item = await ItemModel.findOne({ id: itemId });
+    if (!item) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+
+    // Find the buyer
+    const buyer = await UserModel.findById(buyerId);
+    if (!buyer) {
+      return res.status(404).json({ message: "Buyer not found" });
+    }
+
+    // Find the seller
+    const seller = await UserModel.findById(item.seller);
+    if (!seller) {
+      return res.status(404).json({ message: "Seller not found" });
+    }
+
+    if (buyer.money < item.price) {
+      return res.status(400).json({ message: "Insufficient balance" });
+    }
+
+    buyer.money -= item.price;
+    seller.money += item.price;
+
+    buyer.boughtItems.push(itemId);
+
+    seller.items = seller.items.filter(
+      (sellerItemId) => sellerItemId !== itemId
+    );
+
+    await buyer.save();
+    await seller.save();
+
+    await ItemModel.findByIdAndDelete(itemId);
+
+    return res.status(200).json({ message: "Item bought successfully" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };

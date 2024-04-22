@@ -1,11 +1,5 @@
 import mongoose from "mongoose";
 
-// validuojama SIGN_IN endpointte
-// const validateEmail = function (email) {
-//   const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-//   return re.test(email);
-// };
-
 const userSchema = mongoose.Schema({
   id: { type: String, required: true },
   name: { type: String, required: true },
@@ -14,12 +8,6 @@ const userSchema = mongoose.Schema({
     trim: true,
     // lowercase: true,
     unique: true,
-    // required: "Email address is required",
-    // validate: [validateEmail, "Please fill a valid email address"],
-    // match: [
-    //   /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-    //   "Please fill a valid email address",
-    // ],
   },
   password: { type: String, required: true },
   items: { type: Array, required: false },
