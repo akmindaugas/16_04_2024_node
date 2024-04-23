@@ -171,12 +171,13 @@ export const USER_BY_ID_BUY_ITEM = async (req, res) => {
       return res.status(400).json({ message: "Insufficient balance" });
     }
     user.money -= price;
-    user.boughtItems.push(items_id);
+    user.boughtItems.push(item_id);
     await user.save();
 
     return res.status(200).json({ message: "item bought successfully" });
   } catch (err) {
     console.log(err);
+    return res.status(500).json({ message: "error" });
   }
 };
 // ============================================================================

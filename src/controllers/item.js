@@ -46,13 +46,13 @@ export const INSERT_ITEM = async (req, res) => {
 export const GET_ALL_USERS_ITEMS = async (req, res) => {
   try {
     const items = await ItemModel.find({
-      userId: req.body.userId,
+      user: req.body.userId,
     });
 
     if (!items.length) {
       return res.status(404).json({ message: "no items found for you" });
     }
-
+    console.log("this is check log");
     return res.status(200).json({ items: items });
   } catch (err) {
     console.log(err);
