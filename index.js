@@ -1,7 +1,8 @@
+import "dotenv/config";
 import cors from "cors";
 import express from "express";
 import mongoose from "mongoose";
-import "dotenv/config";
+
 // routo takelyje items turi buti su pletiniu .js, kitaip nesuveiks
 import itemRoutes from "./src/routes/item.js";
 import userRoutes from "./src/routes/user.js";
