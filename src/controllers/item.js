@@ -26,21 +26,26 @@ export const GET_ITEM_BY_ID = async (req, res) => {
 
 export const INSERT_ITEM = async (req, res) => {
   try {
-    console.log(req.body);
+    console.log("Received request body:", req.body);
     const item = new ItemModel({
       id: uuidv4(),
       title: req.body.title,
       seller: req.body.seller,
       price: req.body.price,
       photoUrl: req.body.photoUrl,
-    });
+    }); 
+    console.log(req.body)
+    console.log("Created item object:", item);
     const response = await item.save();
+    console.log("Item saved successfully:", response);
 
     return res
       .status(200)
       .json({ item: response, message: "item was added successfuly" });
   } catch (err) {
-    console.log(err);
+    console.error("Error during item insertion:", err);
+    res.status(500).json({ message: "Error adding item" });
+    // console.log(err);
   }
 };
 export const GET_ALL_USERS_ITEMS = async (req, res) => {

@@ -11,11 +11,11 @@ const app = express();
 // pasakome, kad duomenis gauname json formatu
 app.use(express.json());
 // problema: meta klaida perejus prie loginimosi processinimo is .env
-
+console.log()
 app.use(cors());
 mongoose
   // .connect(process.env.MONGO_CONNECTION)
-  .connect(process.env.uri)
+  .connect(process.env.URI)
   .then(() => console.log("connected to DB"))
   .catch((err) => {
     console.log("ERR:", err);

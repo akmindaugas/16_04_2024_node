@@ -13,8 +13,8 @@ import {
 // per si routeri kuriame visu endpointus
 const router = express.Router();
 
-router.post("/users", SIGN_IN);
-router.get("/users", auth, GET_ALL_USERS);
+router.post("/userSign", SIGN_IN);
+router.get("/allUsers",  GET_ALL_USERS);
 router.get("/users/:id", GET_USER_BY_ID);
 router.post("/users/login", LOG_IN);
 router.post("/users/login/refresh", auth, GET_REFRESH_TOKEN);
