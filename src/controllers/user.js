@@ -74,7 +74,7 @@ export const LOG_IN = async (req, res) => {
     );
 
     if (!isPasswordMatch) {
-      return res.status(400).json({ message: "bad data" });
+      return res.status(400).json({ message: "bad  password data" });
     }
 
     const jwt_token = jwt.sign(

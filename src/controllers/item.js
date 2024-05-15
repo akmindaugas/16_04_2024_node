@@ -30,7 +30,7 @@ export const INSERT_ITEM = async (req, res) => {
     const item = new ItemModel({
       id: uuidv4(),
       title: req.body.title,
-      seller: req.body.seller,
+      name: req.body.name,
       price: req.body.price,
       photoUrl: req.body.photoUrl,
     }); 
